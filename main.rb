@@ -1,4 +1,4 @@
-class Guesser 
+class CodeGuesser 
 
   attr_accessor :guess_color
   attr_writer :guesser_array
@@ -50,22 +50,31 @@ class Guesser
     
 end
 
-class Computer
+class CodeSelector
 
   attr_reader :randomized_code_array
 
   @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
-  def initialize(randomized_code_array = [], player_input_guess = '')
-    @randomized_code_array = randomized_code_array
+  def initialize(code_array = [], player_input_guess = '')
+    @code_array = code_array
   end
 
   def randomly_generate_code
-    4.times{ @randomized_code_array.push(@@possible_random_colors.sample) }
-    p @randomized_code_array
+    4.times{ @code_array.push(@@possible_random_colors.sample) }
+    p @code_array
+  end
+
+  def input_generate_code
+    4.times do |index|
+      puts "Of four total, what color would you like to assign to selection # #{index+1} of the code?"
+      @code_array.push(gets.chomp) 
+    end
+    p @code_array
   end
 
 end
 
-player_one = Guesser.new
-computer_code = Computer.new
-player_one.play_twelve_turns(computer_code.randomly_generate_code)
+guesser_one = CodeGuesser.new
+selector_one = CodeSelector.new
+selector_one.input_generate_code
+#player_one.play_twelve_turns(computer_code.randomly_generate_code)
