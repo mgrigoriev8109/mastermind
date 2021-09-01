@@ -11,24 +11,39 @@
 
 class Player 
 
+  attr_accessor :player_guess
+
   def initialize(player_guess_array=[], player_guess='blue')
     @player_guess_array = player_guess_array
     @player_guess = player_guess
   end
 
-  def get_player_guess
-    print "What is your guess for the first index of the computer code?"
-    @player_guess = gets.chomp
+  def compare_player_input(computer_array, player_input_guess, color)
+    if color == player_input_guess
+      p "You've guessed this color correctly!"
+    elsif computer_array.include?(player_input_guess)
+      p "You've guessed incorrectly, but the computer code does include this color somewhere"
+    else
+      p "You've guessed incorrectly, this color isn't anywhere in the computer's code."
+    end
+  end
+
+  def get_player_guesses(computer_array)
+    computer_array.each_with_index do |color, index|
+      print "What is your guess for color #{index+1} of the computer code?"
+      @player_guess = gets.chomp
+      compare_player_input(computer_array, @player_guess, color)
+    end
   end
 
 end
 
 class Computer
 
-  attr_accessor :computer_code_array
+  attr_reader :computer_code_array
 
   @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
-  def initialize(computer_code_array=[])
+  def initialize(computer_code_array = [], player_input_guess = '')
     @computer_code_array = computer_code_array
   end
 
@@ -37,24 +52,8 @@ class Computer
     p @computer_code_array
   end
 
-  def compare_player_input(player_input_guess, color)
-    if color == player_input_guess
-      p "You've guessed this index correctly!"
-    elsif @computer_code_array.include?(player_input_guess)
-      p "You've guessed incorrectly, but the computer code does include this color somewhere"
-    else
-      p "You've guessed incorrectly, this color isn't anywhere in the computer's code."
-    end
-  end
-
-  def compare_entire_array(player_input_guess)
-    @computer_code_array.each do |color|
-      self.compare_player_input(player_input_guess, color)
-    end
-  end
 end
 
 first_player_turn = Player.new
 computer_code = Computer.new
-computer_code.randomly_generate_code
-computer_code.compare_entire_array(first_player_turn.get_player_guess)
+first_player_turn.get_player_guesses(computer_code.randomly_generate_code)
