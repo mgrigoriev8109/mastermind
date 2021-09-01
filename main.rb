@@ -24,9 +24,22 @@ class Player
 
 end
 
-#class Computer
+class Computer
 
-#end
+  attr_accessor :computer_code_array
+
+  @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
+  def initialize(computer_code_array=[])
+    @computer_code_array = computer_code_array
+  end
+
+  def randomly_generate_code
+    4.times{ @computer_code_array.push(@@possible_random_colors.sample) }
+    p @computer_code_array
+  end
+end
 
 first_player_turn = Player.new
 first_player_turn.get_player_guess
+computer_code = Computer.new
+computer_code.randomly_generate_code
