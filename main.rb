@@ -18,8 +18,7 @@ class Player
 
   def get_player_guess
     print "What is your guess for the first index of the computer code?"
-    @player_guess = gets
-    p @player_guess.chomp
+    @player_guess = gets.chomp
   end
 
 end
@@ -37,9 +36,20 @@ class Computer
     4.times{ @computer_code_array.push(@@possible_random_colors.sample) }
     p @computer_code_array
   end
+
+  def compare_player_input(player_input_guess)
+    p player_input_guess
+    if @computer_code_array[0] == player_input_guess
+      p "You've guessed this index correctly!"
+    elsif @computer_code_array.include?(player_input_guess)
+      p "You've guessed incorrectly, but the computer code does include this color somewhere"
+    else
+      p "You've guessed incorrectly, this color isn't anywhere in the computer's code."
+    end
+  end
 end
 
 first_player_turn = Player.new
-first_player_turn.get_player_guess
 computer_code = Computer.new
 computer_code.randomly_generate_code
+computer_code.compare_player_input(first_player_turn.get_player_guess)
