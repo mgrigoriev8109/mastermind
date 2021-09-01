@@ -12,6 +12,7 @@
 class Player 
 
   attr_accessor :player_guess
+  attr_writer :player_guess_array
 
   def initialize(player_guess_array=[], player_guess='blue')
     @player_guess_array = player_guess_array
@@ -20,19 +21,35 @@ class Player
 
   def compare_player_input(computer_array, player_input_guess, color)
     if color == player_input_guess
-      p "You've guessed this color correctly!"
+      puts "You've guessed this color correctly!"
     elsif computer_array.include?(player_input_guess)
-      p "You've guessed incorrectly, but the computer code does include this color somewhere"
+      puts "You've guessed incorrectly, but the computer code does include this color somewhere"
     else
-      p "You've guessed incorrectly, this color isn't anywhere in the computer's code."
+      puts "You've guessed incorrectly, this color isn't anywhere in the computer's code."
     end
   end
 
-  def get_player_guesses(computer_array)
+  def play_single_turn(computer_array)
     computer_array.each_with_index do |color, index|
-      print "What is your guess for color #{index+1} of the computer code?"
+      puts "What is your guess for color #{index+1} of the computer code? "
       @player_guess = gets.chomp
+      @player_guess_array.push(@player_guess)
       compare_player_input(computer_array, @player_guess, color)
+    end
+  end
+
+  def play_twelve_turns(computer_array)
+    puts "You have twelve turns to guess a computer code, consisting of a random combination of the colors red, blue, green, and yellow."
+    12.times do |turn| 
+      puts "This is turn # #{turn+1}. "
+      play_single_turn(computer_array) 
+      puts @player_guess_array
+      if @player_guess_array == computer_array
+        puts "You have correctly guessed the computer's entire code!"
+      else 
+        puts "You couldn't guess the code this time around, but let's try again starting at the first color. "
+        @player_guess_array = []
+      end
     end
   end
 
@@ -54,6 +71,6 @@ class Computer
 
 end
 
-first_player_turn = Player.new
+player_one = Player.new
 computer_code = Computer.new
-first_player_turn.get_player_guesses(computer_code.randomly_generate_code)
+player_one.play_twelve_turns(computer_code.randomly_generate_code)
