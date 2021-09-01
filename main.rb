@@ -37,9 +37,8 @@ class Computer
     p @computer_code_array
   end
 
-  def compare_player_input(player_input_guess)
-    p player_input_guess
-    if @computer_code_array[0] == player_input_guess
+  def compare_player_input(player_input_guess, color)
+    if color == player_input_guess
       p "You've guessed this index correctly!"
     elsif @computer_code_array.include?(player_input_guess)
       p "You've guessed incorrectly, but the computer code does include this color somewhere"
@@ -47,9 +46,15 @@ class Computer
       p "You've guessed incorrectly, this color isn't anywhere in the computer's code."
     end
   end
+
+  def compare_entire_array(player_input_guess)
+    @computer_code_array.each do |color|
+      self.compare_player_input(player_input_guess, color)
+    end
+  end
 end
 
 first_player_turn = Player.new
 computer_code = Computer.new
 computer_code.randomly_generate_code
-computer_code.compare_player_input(first_player_turn.get_player_guess)
+computer_code.compare_entire_array(first_player_turn.get_player_guess)
