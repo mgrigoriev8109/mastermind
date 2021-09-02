@@ -5,16 +5,18 @@ class CodeGuesser
   attr_accessor :guess_color, :player_plays, :known_colors_array
   attr_writer :guesser_array
 
-  def initialize(guesser_array = [], guess_color = 'blue', player_plays = true, known_colors_array = [])
+  def initialize(guesser_array = [], guess_color = 'blue', player_plays = false, known_colors_array = [])
     @guesser_array = guesser_array
     @guess_color = guess_color
     @player_plays = player_plays
     @known_colors_array = known_colors_array
   end
 
-  def computer_or_human_play
+  def computer_or_human_play(index)
     if @player_plays == true
       @guess_color = gets.chomp
+    elsif @known_colors_array[index]
+      @guess_color = @known_colors_array[index]
     else
       @guess_color = @@possible_random_colors.sample
     end
@@ -34,7 +36,7 @@ class CodeGuesser
   def play_single_turn(code_array)
     code_array.each_with_index do |code_color, index|
       puts "What is the guess for color #{index + 1} of the code? "
-      computer_or_human_play
+      computer_or_human_play(index)
       @guesser_array.push(@guess_color)
       if @known_colors_array[index]
         puts "The current known code is #{@known_colors_array}, and this color is already known to be #{@known_colors_array[index]}"
