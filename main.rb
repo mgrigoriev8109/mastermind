@@ -2,13 +2,14 @@ class CodeGuesser
 
   @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
 
-  attr_accessor :guess_color, :player_plays
+  attr_accessor :guess_color, :player_plays, :known_colors_array
   attr_writer :guesser_array
 
-  def initialize(guesser_array = [], guess_color = 'blue', player_plays = true)
+  def initialize(guesser_array = [], guess_color = 'blue', player_plays = true, known_colors_array = [])
     @guesser_array = guesser_array
     @guess_color = guess_color
     @player_plays = player_plays
+    @known_colors_array = known_colors_array
   end
 
   def computer_or_human_play
@@ -19,8 +20,9 @@ class CodeGuesser
     end
   end
 
-  def compare_input(code_array, guess_color, code_color)
+  def compare_input(code_array, guess_color, code_color, index)
     if code_color == guess_color
+      @known_colors_array.insert(index, guess_color)
       puts "This color was guessed correctly!"
     elsif code_array.include?(guess_color)
       puts "This color is incorrect, but the code does include this color somewhere"
@@ -34,7 +36,11 @@ class CodeGuesser
       puts "What is the guess for color #{index + 1} of the code? "
       computer_or_human_play
       @guesser_array.push(@guess_color)
-      compare_input(code_array, @guess_color, code_color)
+      if @known_colors_array[index]
+        puts "The current known code is #{@known_colors_array}, and this color is already known to be #{@known_colors_array[index]}"
+      else
+        compare_input(code_array, @guess_color, code_color, index)
+      end
     end
   end
 
