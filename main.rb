@@ -2,14 +2,15 @@ class CodeGuesser
 
   @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
 
-  attr_accessor :guess_color, :player_plays, :known_colors_array
+  attr_accessor :guess_color, :player_plays, :known_colors_array, :next_computer_guess
   attr_writer :guesser_array
 
-  def initialize(guesser_array = [], guess_color = 'blue', player_plays = false, known_colors_array = [])
+  def initialize(player_plays = false, guesser_array = [], guess_color = 'blue', known_colors_array = [], next_computer_guess = '')
     @guesser_array = guesser_array
     @guess_color = guess_color
     @player_plays = player_plays
     @known_colors_array = known_colors_array
+    @next_computer_guess = next_computer_guess
   end
 
   def computer_or_human_play(index)
@@ -17,17 +18,22 @@ class CodeGuesser
       @guess_color = gets.chomp
     elsif @known_colors_array[index]
       @guess_color = @known_colors_array[index]
+    elsif #figure out this conditional
+      @guess_color = @next_computer_guess
     else
       @guess_color = @@possible_random_colors.sample
+      puts "The computer has guessed #{@guess_color}"
     end
   end
 
   def compare_input(code_array, guess_color, code_color, index)
     if code_color == guess_color
+      @known_colors_array.slice!(index)
       @known_colors_array.insert(index, guess_color)
       puts "This color was guessed correctly!"
     elsif code_array.include?(guess_color)
       puts "This color is incorrect, but the code does include this color somewhere"
+      @next_computer_guess = guess_color
     else
       puts "This color is incorrect, this color isn't anywhere in the code."
     end
@@ -51,7 +57,6 @@ class CodeGuesser
     12.times do |turn| 
       puts "This is turn # #{turn + 1}. "
       play_single_turn(code_array) 
-      puts @guesser_array
       check_for_gameover(@guesser_array, code_array)
     end
     puts "Looks like the code couldn't be guessed after 12 turns, better luck next time!"
@@ -94,7 +99,14 @@ class CodeSelector
 
 end
 
-guesser_one = CodeGuesser.new
-selector_one = CodeSelector.new
-
-guesser_one.play_twelve_turns(selector_one.randomly_generate_code)
+puts "Would you like to be the guesser of this code? Say Yes if that's the case, otherwise you'll create a code for the computer."
+player_input = gets.chomp
+if player_input == "Yes"
+  guesser_human = CodeGuesser.new(true)
+  selector_computer = CodeSelector.new
+  guesser_human.play_twelve_turns(selector_computer.randomly_generate_code)
+else
+  guesser_computer = CodeGuesser.new
+  selector_human = CodeSelector.new
+  guesser_computer.play_twelve_turns(selector_human.input_generate_code)
+end
