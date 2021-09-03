@@ -5,12 +5,13 @@ class CodeGuesser
   attr_accessor :guess_color, :player_plays, :known_colors_array, :next_computer_guess
   attr_writer :guesser_array
 
-  def initialize(player_plays = false, guesser_array = [], guess_color = 'blue', known_colors_array = [], next_computer_guess = '')
+  def initialize(player_plays = false, guesser_array = [], guess_color = 'blue', known_colors_array = [], next_computer_guess = '', remaining_colors_array = [])
     @guesser_array = guesser_array
     @guess_color = guess_color
     @player_plays = player_plays
     @known_colors_array = known_colors_array
     @next_computer_guess = next_computer_guess
+    @remaining_colors_array = remaining_colors_array
   end
 
   def computer_or_human_play(index)
@@ -18,7 +19,7 @@ class CodeGuesser
       @guess_color = gets.chomp
     elsif @known_colors_array[index]
       @guess_color = @known_colors_array[index]
-    elsif #figure out this conditional
+    elsif @next_computer_guess != ''
       @guess_color = @next_computer_guess
     else
       @guess_color = @@possible_random_colors.sample
@@ -30,8 +31,11 @@ class CodeGuesser
     if code_color == guess_color
       @known_colors_array.slice!(index)
       @known_colors_array.insert(index, guess_color)
+      @next_computer_guess = ''
+      @remaining_colors_array.slice!(index)
+      p @remaining_colors_array
       puts "This color was guessed correctly!"
-    elsif code_array.include?(guess_color)
+    elsif @remaining_colors_array.include?(guess_color)
       puts "This color is incorrect, but the code does include this color somewhere"
       @next_computer_guess = guess_color
     else
@@ -43,6 +47,8 @@ class CodeGuesser
     code_array.each_with_index do |code_color, index|
       puts "What is the guess for color #{index + 1} of the code? "
       computer_or_human_play(index)
+      p computer_or_human_play(index)
+      p code_array
       @guesser_array.push(@guess_color)
       if @known_colors_array[index]
         puts "The current known code is #{@known_colors_array}, and this color is already known to be #{@known_colors_array[index]}"
@@ -54,6 +60,7 @@ class CodeGuesser
 
   def play_twelve_turns(code_array)
     puts "There are twelve turns to guess a code, consisting of a random combination of the colors red, blue, green, and yellow."
+    @remaining_colors_array = code_array
     12.times do |turn| 
       puts "This is turn # #{turn + 1}. "
       play_single_turn(code_array) 
