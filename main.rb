@@ -61,7 +61,6 @@ class CodeGuesser
       puts "This is turn # #{turn + 1}. "
       play_single_turn(code_array) 
       check_for_gameover(@guesser_array, code_array)
-
     end
     puts "Looks like the code couldn't be guessed after 12 turns, better luck next time!"
   end
@@ -75,11 +74,9 @@ class CodeGuesser
       @guesser_array = []
     end
   end
-    
 end
 
 class CodeSelector
-
   attr_reader :randomized_code_array
 
   @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
@@ -99,10 +96,9 @@ class CodeSelector
     end
     p @code_array
   end
-
 end
 
-puts "Would you like to be the guesser of this code? Say Yes if that's the case, otherwise you'll create a code for the computer."
+puts "Would you like to be the guesser of this code? Say Yes if that's the case, otherwise type No and you'll create a code for the computer."
 player_input = gets.chomp
 if player_input == "Yes"
   guesser_human = CodeGuesser.new(true)
