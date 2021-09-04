@@ -1,3 +1,4 @@
+
 class CodeGuesser 
 
   @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
@@ -22,19 +23,18 @@ class CodeGuesser
     elsif @next_computer_guess != ''
       @guess_color = @next_computer_guess
     else
-      @guess_color = @@possible_random_colors.sample
       puts "The computer has guessed #{@guess_color}"
+      @guess_color = @@possible_random_colors.sample
     end
   end
 
   def compare_input(code_array, guess_color, code_color, index)
     if code_color == guess_color
+      puts "This color was guessed correctly!"
       @known_colors_array.slice!(index)
       @known_colors_array.insert(index, guess_color)
       @next_computer_guess = ''
       @remaining_colors_array.slice!(index)
-      p @remaining_colors_array
-      puts "This color was guessed correctly!"
     elsif @remaining_colors_array.include?(guess_color)
       puts "This color is incorrect, but the code does include this color somewhere"
       @next_computer_guess = guess_color
@@ -47,8 +47,6 @@ class CodeGuesser
     code_array.each_with_index do |code_color, index|
       puts "What is the guess for color #{index + 1} of the code? "
       computer_or_human_play(index)
-      p computer_or_human_play(index)
-      p code_array
       @guesser_array.push(@guess_color)
       if @known_colors_array[index]
         puts "The current known code is #{@known_colors_array}, and this color is already known to be #{@known_colors_array[index]}"
@@ -65,6 +63,7 @@ class CodeGuesser
       puts "This is turn # #{turn + 1}. "
       play_single_turn(code_array) 
       check_for_gameover(@guesser_array, code_array)
+
     end
     puts "Looks like the code couldn't be guessed after 12 turns, better luck next time!"
   end
