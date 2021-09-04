@@ -1,18 +1,15 @@
-#require 'pry-byebug'
 class CodeGuesser 
-
-  @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
-
-  attr_accessor :guess_color, :player_plays, :known_colors_array, :next_computer_guess
+  attr_accessor :guess_color, :player_plays, :known_colors_array, :next_computer_guess, :possible_random_colors
   attr_writer :guesser_array
 
-  def initialize(player_plays = false, guesser_array = [], guess_color = 'blue', known_colors_array = [], next_computer_guess = '', remaining_colors_array = [])
+  def initialize(possible_random_colors = ['red', 'blue', 'green', 'yellow'], player_plays = false, guesser_array = [], guess_color = 'blue', known_colors_array = [], next_computer_guess = '', remaining_colors_array = [])
     @guesser_array = guesser_array
     @guess_color = guess_color
     @player_plays = player_plays
     @known_colors_array = known_colors_array
     @next_computer_guess = next_computer_guess
     @remaining_colors_array = remaining_colors_array
+    @possible_random_colors = possible_random_colors
   end
 
   def computer_or_human_play(index)
@@ -23,25 +20,24 @@ class CodeGuesser
     elsif @next_computer_guess != ''
       @guess_color = @next_computer_guess
     else
-      @guess_color = @@possible_random_colors.sample
+      @guess_color = @possible_random_colors.sample
       puts "The computer has guessed #{@guess_color}"
     end
   end
 
   def compare_input(code_array, guess_color, code_color, index)
-   # binding.pry
     if code_color == guess_color
-      puts "This color was guessed correctly!"
+      puts "#{guess_color} was guessed correctly!"
       @known_colors_array.slice!(index)
       @known_colors_array.insert(index, guess_color)
       @next_computer_guess = ''
-      @remaining_colors_array.slice!(index)
-      
+      @remaining_colors_array.delete_at(@remaining_colors_array.index(guess_color))
     elsif @remaining_colors_array.include?(guess_color)
-      puts "This color is incorrect, but the code does include this color somewhere"
+      puts "#{guess_color} is incorrect, but the code does include #{guess_color} somewhere"
       @next_computer_guess = guess_color
     else
-      puts "This color is incorrect, this color isn't anywhere in the code."
+      puts "#{guess_color} is incorrect, #{guess_color} isn't anywhere in the code."
+      @possible_random_colors.delete(guess_color)
     end
   end
 
@@ -93,7 +89,6 @@ class CodeSelector
 
   def randomly_generate_code
     4.times{ @code_array.push(@@possible_random_colors.sample) }
-    p @code_array
     @code_array
   end
 
