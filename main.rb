@@ -1,6 +1,7 @@
 class CodeGuesser 
-  attr_accessor :guess_color, :player_plays, :known_colors_array, :next_computer_guess, :possible_random_colors
+  attr_accessor :guess_color, :known_colors_array, :next_computer_guess, :possible_random_colors
   attr_writer :guesser_array
+  attr_reader :player_plays
 
   def initialize(possible_random_colors = ['red', 'blue', 'green', 'yellow'], player_plays = false, guesser_array = [], guess_color = 'blue', known_colors_array = [], next_computer_guess = '', remaining_colors_array = [])
     @guesser_array = guesser_array
@@ -11,6 +12,19 @@ class CodeGuesser
     @remaining_colors_array = remaining_colors_array
     @possible_random_colors = possible_random_colors
   end
+
+  def play_twelve_turns(code_array)
+    puts "There are twelve turns to guess a code, consisting of a random combination of the colors red, blue, green, and yellow."
+    @remaining_colors_array = Array.new(code_array)
+    12.times do |turn| 
+      puts "This is turn # #{turn + 1}. "
+      play_single_turn(code_array) 
+      check_for_gameover(@guesser_array, code_array)
+    end
+    puts "Looks like the code couldn't be guessed after 12 turns, better luck next time!"
+  end
+
+  private 
 
   def computer_or_human_play(index)
     if @player_plays == true
@@ -52,17 +66,6 @@ class CodeGuesser
         compare_input(code_array, @guess_color, code_color, index)
       end
     end
-  end
-
-  def play_twelve_turns(code_array)
-    puts "There are twelve turns to guess a code, consisting of a random combination of the colors red, blue, green, and yellow."
-    @remaining_colors_array = Array.new(code_array)
-    12.times do |turn| 
-      puts "This is turn # #{turn + 1}. "
-      play_single_turn(code_array) 
-      check_for_gameover(@guesser_array, code_array)
-    end
-    puts "Looks like the code couldn't be guessed after 12 turns, better luck next time!"
   end
 
   def check_for_gameover(guesser_array, code_array)
