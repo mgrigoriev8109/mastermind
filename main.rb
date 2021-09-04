@@ -1,4 +1,4 @@
-
+#require 'pry-byebug'
 class CodeGuesser 
 
   @@possible_random_colors = ['red', 'blue', 'green', 'yellow']
@@ -23,18 +23,20 @@ class CodeGuesser
     elsif @next_computer_guess != ''
       @guess_color = @next_computer_guess
     else
-      puts "The computer has guessed #{@guess_color}"
       @guess_color = @@possible_random_colors.sample
+      puts "The computer has guessed #{@guess_color}"
     end
   end
 
   def compare_input(code_array, guess_color, code_color, index)
+   # binding.pry
     if code_color == guess_color
       puts "This color was guessed correctly!"
       @known_colors_array.slice!(index)
       @known_colors_array.insert(index, guess_color)
       @next_computer_guess = ''
       @remaining_colors_array.slice!(index)
+      
     elsif @remaining_colors_array.include?(guess_color)
       puts "This color is incorrect, but the code does include this color somewhere"
       @next_computer_guess = guess_color
@@ -58,7 +60,7 @@ class CodeGuesser
 
   def play_twelve_turns(code_array)
     puts "There are twelve turns to guess a code, consisting of a random combination of the colors red, blue, green, and yellow."
-    @remaining_colors_array = code_array
+    @remaining_colors_array = Array.new(code_array)
     12.times do |turn| 
       puts "This is turn # #{turn + 1}. "
       play_single_turn(code_array) 
